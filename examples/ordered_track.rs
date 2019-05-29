@@ -6,6 +6,7 @@ use std::collections::HashMap;
 
 use specs::prelude::*;
 
+#[derive(Clone)]
 struct TrackedComponent(u64);
 
 impl Component for TrackedComponent {

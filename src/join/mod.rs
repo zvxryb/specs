@@ -81,9 +81,9 @@ bitset_and!{A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P}
 /// ```
 /// # use specs::prelude::*;
 /// # use specs::world::EntitiesRes;
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Debug, Clone, PartialEq)]
 /// # struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Debug, Clone, PartialEq)]
 /// # struct Vel; impl Component for Vel { type Storage = VecStorage<Self>; }
 /// let mut world = World::new();
 ///
@@ -170,9 +170,9 @@ pub trait Join {
     ///
     /// ```
     /// # use specs::prelude::*;
-    /// # #[derive(Debug, PartialEq)]
+    /// # #[derive(Debug, Clone, PartialEq)]
     /// # struct Pos { x: i32, y: i32 } impl Component for Pos { type Storage = VecStorage<Self>; }
-    /// # #[derive(Debug, PartialEq)]
+    /// # #[derive(Debug, Clone, PartialEq)]
     /// # struct Vel { x: i32, y: i32 } impl Component for Vel { type Storage = VecStorage<Self>; }
     /// struct ExampleSystem;
     /// impl<'a> System<'a> for ExampleSystem {
@@ -308,9 +308,9 @@ impl<J: Join> JoinIter<J> {
     ///
     /// ```
     /// # use specs::prelude::*;
-    /// # #[derive(Debug, PartialEq)]
+    /// # #[derive(Debug, Clone, PartialEq)]
     /// # struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
-    /// # #[derive(Debug, PartialEq)]
+    /// # #[derive(Debug, Clone, PartialEq)]
     /// # struct Vel; impl Component for Vel { type Storage = VecStorage<Self>; }
     /// let mut world = World::new();
     ///

@@ -29,8 +29,8 @@ use world::{Component, EntitiesRes};
 /// ```
 /// use specs::prelude::*;
 ///
-/// struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
-/// struct Vel; impl Component for Vel { type Storage = VecStorage<Self>; }
+/// #[derive(Clone)] struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
+/// #[derive(Clone)] struct Vel; impl Component for Vel { type Storage = VecStorage<Self>; }
 ///
 /// let mut world = World::new(); world.register::<Pos>(); world.register::<Vel>();
 /// let pos_storage = world.read_storage::<Pos>();
@@ -52,9 +52,9 @@ use world::{Component, EntitiesRes};
 ///
 /// ```
 /// # use specs::prelude::*;
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Vel; impl Component for Vel { type Storage = VecStorage<Self>; }
 /// #
 /// # let mut world = World::new(); world.register::<Pos>(); world.register::<Vel>();
@@ -81,7 +81,7 @@ use world::{Component, EntitiesRes};
 ///
 /// ```
 /// # use specs::prelude::*;
-/// #[derive(Debug)]
+/// #[derive(Clone, Debug)]
 /// struct Pos {
 ///     x: f32,
 ///     y: f32,
@@ -158,7 +158,7 @@ where
 ///
 /// ```
 /// # use specs::prelude::*;
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Pos(f32); impl Component for Pos { type Storage = VecStorage<Self>; }
 /// #
 /// # let mut world = World::new(); world.register::<Pos>();
@@ -183,7 +183,7 @@ where
 /// ```
 /// # use specs::prelude::*;
 /// # use specs::storage::InsertResult;
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Pos(f32); impl Component for Pos { type Storage = VecStorage<Self>; }
 /// #
 /// # let mut world = World::new(); world.register::<Pos>();
@@ -231,6 +231,7 @@ mod tests {
     use prelude::*;
     use storage::MaskedStorage;
 
+    #[derive(Clone)]
     struct Foo;
     impl Component for Foo {
         type Storage = VecStorage<Self>;

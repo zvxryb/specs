@@ -22,6 +22,7 @@ use storage::UnprotectedStorage;
 /// ```
 /// use specs::prelude::*;
 ///
+/// #[derive(Clone)]
 /// pub struct Position {
 ///     pub x: f32,
 ///     pub y: f32,
@@ -35,6 +36,7 @@ use storage::UnprotectedStorage;
 /// ```
 /// use specs::prelude::*;
 ///
+/// #[derive(Clone)]
 /// pub enum Light {
 ///     // (Variants would have additional data)
 ///     Directional,
@@ -50,6 +52,7 @@ use storage::UnprotectedStorage;
 /// use specs::prelude::*;
 /// use specs::storage::HashMapStorage;
 ///
+/// #[derive(Clone)]
 /// pub struct Camera {
 ///     // In an ECS, the camera would not itself have a position;
 ///     // you would just attach a `Position` component to the same
@@ -63,5 +66,5 @@ use storage::UnprotectedStorage;
 /// ```
 pub trait Component: Any + Sized {
     /// Associated storage type for this component.
-    type Storage: UnprotectedStorage<Self> + Any + Send + Sync;
+    type Storage: UnprotectedStorage<Self> + Any + Send + Sync + Clone;
 }

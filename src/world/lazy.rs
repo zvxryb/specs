@@ -1,5 +1,6 @@
 use crossbeam::queue::SegQueue;
 
+use shred::Resource;
 use world::{Builder, Component, EntitiesRes, Entity, World};
 
 struct Queue<T>(SegQueue<T>);
@@ -96,6 +97,7 @@ impl LazyUpdate {
     /// ```
     /// # use specs::prelude::*;
     /// # let mut world = World::new();
+    /// #[derive(Clone)]
     /// struct Pos(f32, f32);
     ///
     /// impl Component for Pos {
@@ -122,6 +124,7 @@ impl LazyUpdate {
     /// ```
     /// # use specs::prelude::*;
     /// #
+    /// #[derive(Clone)]
     /// struct Pos(f32, f32);
     ///
     /// impl Component for Pos {
@@ -157,6 +160,7 @@ impl LazyUpdate {
     /// ```
     /// # use specs::prelude::*;
     /// #
+    /// #[derive(Clone)]
     /// struct Pos(f32, f32);
     ///
     /// impl Component for Pos {
@@ -198,6 +202,7 @@ impl LazyUpdate {
     /// ```
     /// # use specs::prelude::*;
     /// #
+    /// #[derive(Clone)]
     /// struct Pos;
     ///
     /// impl Component for Pos {
@@ -232,6 +237,7 @@ impl LazyUpdate {
     /// ```
     /// # use specs::prelude::*;
     /// #
+    /// #[derive(Clone)]
     /// struct Pos;
     ///
     /// impl Component for Pos {
@@ -312,6 +318,26 @@ impl LazyUpdate {
 
         while let Some(l) = lazy.try_pop() {
             l.update(world);
+        }
+    }
+}
+
+impl Resource for LazyUpdate {
+    fn clone_resource(&self) -> Box<Resource> {
+        if let Some(queue) = &self.queue {
+            debug_assert!(queue.0.is_empty(),
+                "Non-empty LazyUpdate queue cannot be cloned; call World::maintain() first")
+        }
+        Box::new(Self::default())
+    }
+    fn clone_resource_from(&mut self, other: &Resource) {
+        if let Some(queue) = &other.downcast_ref::<Self>().and_then(|lazy| lazy.queue.as_ref()) {
+            debug_assert!(queue.0.is_empty(),
+                "Non-empty LazyUpdate queue cannot be cloned; call World::maintain() first")
+        }
+        if let Some(queue) = &self.queue {
+            debug_assert!(queue.0.is_empty(),
+                "Non-empty LazyUpdate queue cannot be cloned; call World::maintain() first")
         }
     }
 }

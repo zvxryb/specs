@@ -2,12 +2,14 @@ use super::*;
 use join::Join;
 use storage::VecStorage;
 
+#[derive(Clone)]
 struct Pos;
 
 impl Component for Pos {
     type Storage = VecStorage<Self>;
 }
 
+#[derive(Clone)]
 struct Vel;
 
 impl Component for Vel {

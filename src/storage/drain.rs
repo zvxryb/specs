@@ -38,7 +38,7 @@ mod tests {
         use storage::DenseVecStorage;
         use world::{Builder, Component, World};
 
-        #[derive(Debug, PartialEq)]
+        #[derive(Debug, PartialEq, Clone)]
         struct Comp;
 
         impl Component for Comp {

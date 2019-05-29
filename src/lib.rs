@@ -32,6 +32,7 @@
 //! ```rust
 //! use specs::prelude::*;
 //!
+//! #[derive(Clone)]
 //! struct MyComp;
 //!
 //! impl Component for MyComp {
@@ -49,7 +50,7 @@
 //!
 //! use specs::prelude::*;
 //!
-//! #[derive(Component)]
+//! #[derive(Clone, Component)]
 //! #[storage(VecStorage)]
 //! struct MyComp;
 //! # fn main() {}
@@ -99,12 +100,14 @@
 //! // A component contains data which is
 //! // associated with an entity.
 //!
+//! #[derive(Clone)]
 //! struct Vel(f32);
 //!
 //! impl Component for Vel {
 //!     type Storage = VecStorage<Self>;
 //! }
 //!
+//! #[derive(Clone)]
 //! struct Pos(f32);
 //!
 //! impl Component for Pos {
@@ -184,6 +187,9 @@
 //!
 
 pub extern crate shred;
+
+#[macro_use]
+extern crate shred_derive;
 
 extern crate crossbeam;
 #[macro_use]

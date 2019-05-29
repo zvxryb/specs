@@ -4,6 +4,7 @@ extern crate specs;
 
 use specs::prelude::*;
 
+#[derive(Clone)]
 struct TrackedComponent(u64);
 
 impl Component for TrackedComponent {

@@ -17,6 +17,7 @@ use world::{Entity, Index};
 /// # extern crate specs;
 /// # use specs::prelude::*;
 ///
+/// #[derive(Clone)]
 /// pub struct Health(i32);
 ///
 /// impl Component for Health {
@@ -154,7 +155,9 @@ mod tests {
     use join::Join;
     use storage::DenseVecStorage;
     use world::{Builder, Component, World};
+    use shred::Resource;
 
+    #[derive(Clone, Resource)]
     pub struct Health(i32);
 
     impl Component for Health {

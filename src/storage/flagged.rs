@@ -25,6 +25,7 @@ use shrev::EventChannel;
 ///
 /// use specs::prelude::*;
 ///
+/// #[derive(Clone)]
 /// pub struct Comp(u32);
 /// impl Component for Comp {
 ///     // `FlaggedStorage` acts as a wrapper around another storage.
@@ -137,6 +138,24 @@ pub struct FlaggedStorage<C, T = DenseVecStorage<C>> {
     channel: EventChannel<ComponentEvent>,
     storage: T,
     phantom: PhantomData<C>,
+}
+
+impl<C, T> Clone for FlaggedStorage<C, T>
+where
+    T: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            // Not sure the correct way to handle cloning channels,
+            // maybe it should be using Arc?
+            channel: EventChannel::new(),
+            storage: self.storage.clone(),
+            phantom: Default::default()
+        }
+    }
+    fn clone_from(&mut self, other: &Self) {
+        self.storage.clone_from(&other.storage)
+    }
 }
 
 impl<C, T> Default for FlaggedStorage<C, T>

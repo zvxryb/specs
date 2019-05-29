@@ -12,7 +12,7 @@ use specs::storage::HashMapStorage;
 
 const TAU: f32 = 2. * std::f32::consts::PI;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct ClusterBomb {
     fuse: usize,
 }
@@ -21,7 +21,7 @@ impl Component for ClusterBomb {
     type Storage = HashMapStorage<Self>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Shrapnel {
     durability: usize,
 }
@@ -37,7 +37,7 @@ impl Component for Pos {
     type Storage = VecStorage<Self>;
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Vel(f32, f32);
 impl Component for Vel {
     // This uses `DenseVecStorage`, because nearly all entities have a velocity.

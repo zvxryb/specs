@@ -17,6 +17,7 @@ where
     /// ```rust
     /// # extern crate specs;
     /// # use specs::prelude::*;
+    /// # #[derive(Clone)]
     /// # struct Comp {
     /// #    field: u32
     /// # }
@@ -71,7 +72,7 @@ where
     /// # extern crate specs;
     /// # use specs::prelude::*;
     /// #
-    /// # #[derive(Default)]
+    /// # #[derive(Clone, Default)]
     /// # struct Counter(u32);
     /// #
     /// # impl Counter {
@@ -90,7 +91,7 @@ where
     /// #     type Storage = VecStorage<Self>;
     /// # }
     /// #
-    /// # #[derive(Default)]
+    /// # #[derive(Clone, Default)]
     /// # struct AllowCounter;
     /// #
     /// # impl Component for AllowCounter {

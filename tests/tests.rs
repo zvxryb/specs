@@ -1,5 +1,10 @@
 extern crate rayon;
 extern crate specs;
+extern crate shred;
+#[macro_use]
+extern crate shred_derive;
+
+use shred::Resource;
 
 use specs::prelude::*;
 use specs::storage::HashMapStorage;
@@ -186,7 +191,7 @@ fn stillborn_entities() {
         }
     }
 
-    #[derive(Debug, Default)]
+    #[derive(Debug, Default, Clone, Resource)]
     struct Rand {
         values: Vec<i8>,
     }

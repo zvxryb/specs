@@ -15,9 +15,9 @@ where
 mod map_test {
     use super::*;
 
-    #[derive(Debug)]
+    #[derive(Debug, Clone)]
     struct Comp<T>(T);
-    impl<T: Any + Send + Sync> Component for Comp<T> {
+    impl<T: Any + Send + Sync + Clone> Component for Comp<T> {
         type Storage = VecStorage<Self>;
     }
 
@@ -130,13 +130,13 @@ mod test {
     use super::*;
     use world::Builder;
 
-    #[derive(PartialEq, Eq, Debug, Default)]
+    #[derive(PartialEq, Eq, Debug, Default, Clone)]
     struct CMarker;
     impl Component for CMarker {
         type Storage = NullStorage<Self>;
     }
 
-    #[derive(PartialEq, Eq, Debug)]
+    #[derive(PartialEq, Eq, Debug, Clone)]
     struct Cvec(u32);
     impl From<u32> for Cvec {
         fn from(v: u32) -> Cvec {
@@ -152,7 +152,7 @@ mod test {
         type Storage = VecStorage<Self>;
     }
 
-    #[derive(PartialEq, Eq, Debug)]
+    #[derive(PartialEq, Eq, Debug, Clone)]
     struct FlaggedCvec(u32);
     impl From<u32> for FlaggedCvec {
         fn from(v: u32) -> FlaggedCvec {
@@ -168,7 +168,7 @@ mod test {
         type Storage = FlaggedStorage<Self, VecStorage<Self>>;
     }
 
-    #[derive(PartialEq, Eq, Debug)]
+    #[derive(PartialEq, Eq, Debug, Clone)]
     struct Cmap(u32);
     impl From<u32> for Cmap {
         fn from(v: u32) -> Cmap {
@@ -184,7 +184,7 @@ mod test {
         type Storage = HashMapStorage<Self>;
     }
 
-    #[derive(PartialEq, Eq, Debug)]
+    #[derive(PartialEq, Eq, Debug, Clone)]
     struct CBtree(u32);
     impl From<u32> for CBtree {
         fn from(v: u32) -> CBtree {
@@ -200,7 +200,7 @@ mod test {
         type Storage = BTreeStorage<Self>;
     }
 
-    #[derive(PartialEq, Eq, Debug)]
+    #[derive(PartialEq, Eq, Debug, Clone)]
     #[cfg(feature = "rudy")]
     struct CRudy(u32);
     #[cfg(feature = "rudy")]
@@ -220,7 +220,7 @@ mod test {
         type Storage = RudyStorage<Self>;
     }
 
-    #[derive(Debug, Default, PartialEq)]
+    #[derive(Debug, Default, PartialEq, Clone)]
     struct Cnull;
 
     impl From<u32> for Cnull {
@@ -233,6 +233,7 @@ mod test {
         type Storage = NullStorage<Self>;
     }
 
+    #[derive(Clone)]
     struct CEntries(u32);
 
     impl From<u32> for CEntries {

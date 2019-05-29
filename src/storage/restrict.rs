@@ -41,6 +41,7 @@ impl ImmutableAliasing for ImmutableParallelRestriction {}
 ///
 /// ```rust
 /// # use specs::prelude::*;
+/// #[derive(Clone)]
 /// struct SomeComp(u32);
 /// impl Component for SomeComp {
 ///     type Storage = VecStorage<Self>;

@@ -63,12 +63,14 @@ pub trait Builder {
 /// use specs::prelude::*;
 /// use specs::storage::HashMapStorage;
 ///
+/// #[derive(Clone)]
 /// struct Health(f32);
 ///
 /// impl Component for Health {
 ///     type Storage = HashMapStorage<Self>;
 /// }
 ///
+/// #[derive(Clone)]
 /// struct Pos {
 ///     x: f32,
 ///     y: f32,
@@ -95,12 +97,14 @@ pub trait Builder {
 /// use specs::prelude::*;
 /// use specs::storage::HashMapStorage;
 ///
+/// #[derive(Clone)]
 /// struct MandatoryHealth(f32);
 ///
 /// impl Component for MandatoryHealth {
 ///     type Storage = HashMapStorage<Self>;
 /// }
 ///
+/// #[derive(Clone)]
 /// struct OptionalPos {
 ///     x: f32,
 ///     y: f32,
@@ -182,11 +186,14 @@ impl<'a> Drop for EntityBuilder<'a> {
 /// ## Examples
 ///
 /// ```
+/// #[macro_use] extern crate shred_derive;
 /// use specs::prelude::*;
-/// # #[derive(Debug, PartialEq)]
+/// use specs::shred::Resource;
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Pos { x: f32, y: f32, } impl Component for Pos { type Storage = VecStorage<Self>; }
-/// # #[derive(Debug, PartialEq)]
+/// # #[derive(Clone, Debug, PartialEq)]
 /// # struct Vel { x: f32, y: f32, } impl Component for Vel { type Storage = VecStorage<Self>; }
+/// # #[derive(Clone, Resource)]
 /// # struct DeltaTime(f32);
 ///
 /// let mut world = World::new();
@@ -238,6 +245,7 @@ impl<'a> Drop for EntityBuilder<'a> {
 ///     assert!(pos_storage.get(empty).is_some());
 /// }
 /// ```
+#[derive(Clone)]
 pub struct World {
     /// The resources used for this world.
     pub res: Resources,
@@ -261,6 +269,7 @@ impl World {
     /// ```
     /// use specs::prelude::*;
     ///
+    /// #[derive(Clone)]
     /// struct Pos {
     ///     x: f32,
     ///     y: f32,
@@ -312,7 +321,7 @@ impl World {
     ///
     /// ```
     /// # use specs::prelude::*;
-    /// # struct Pos; struct Vel;
+    /// # #[derive(Clone)] struct Pos; #[derive(Clone)] struct Vel;
     /// # impl Component for Pos { type Storage = VecStorage<Self>; }
     /// # impl Component for Vel { type Storage = VecStorage<Self>; }
     ///
@@ -368,16 +377,19 @@ impl World {
     /// ## Examples
     ///
     /// ```
+    /// #[macro_use] extern crate shred_derive;
     /// # use specs::prelude::*;
+    /// use specs::shred::Resource;
     /// let mut world = World::new();
     ///
+    /// #[derive(Clone)]
     /// struct MyComp;
     ///
     /// impl Component for MyComp {
     ///     type Storage = DenseVecStorage<Self>;
     /// }
     ///
-    /// #[derive(Default)]
+    /// #[derive(Clone, Default, Resource)]
     /// struct MyRes {
     ///     field: i32,
     /// }

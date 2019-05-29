@@ -18,7 +18,7 @@ use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut, Not};
 
 use hibitset::{BitSet, BitSetLike, BitSetNot};
-use shred::{CastFrom, Fetch};
+use shred::{CastFrom, Fetch, Resource};
 
 use self::drain::Drain;
 use error::{Error, WrongGeneration};
@@ -120,11 +120,24 @@ pub type InsertResult<T> = Result<Option<T>, Error>;
 
 /// The `UnprotectedStorage` together with the `BitSet` that knows
 /// about which elements are stored, and which are not.
-#[derive(Derivative)]
+#[derive(Derivative, Resource)]
 #[derivative(Default(bound = "T::Storage: Default"))]
 pub struct MaskedStorage<T: Component> {
     mask: BitSet,
     inner: T::Storage,
+}
+
+impl<T: Component> Clone for MaskedStorage<T> {
+    fn clone(&self) -> Self {
+        Self{
+            mask : self.mask .clone(),
+            inner: self.inner.clone()
+        }
+    }
+    fn clone_from(&mut self, other: &Self) {
+        self.mask  = other.mask .clone();
+        self.inner = other.inner.clone();
+    }
 }
 
 impl<T: Component> MaskedStorage<T> {
@@ -448,6 +461,7 @@ mod tests_inline {
     use rayon::iter::ParallelIterator;
     use {Builder, Component, DenseVecStorage, Entities, ParJoin, ReadStorage, World};
 
+    #[derive(Clone)]
     struct Pos;
 
     impl Component for Pos {

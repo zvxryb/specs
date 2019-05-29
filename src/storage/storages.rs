@@ -12,7 +12,7 @@ use world::Index;
 use rudy::rudymap::RudyMap;
 
 /// BTreeMap-based storage.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(Default(bound = ""))]
 pub struct BTreeStorage<T>(BTreeMap<Index, T>);
 
@@ -44,7 +44,7 @@ impl<T> UnprotectedStorage<T> for BTreeStorage<T> {
 unsafe impl<T> DistinctStorage for BTreeStorage<T> {}
 
 /// HashMap-based storage. Best suited for rare components.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(Default(bound = ""))]
 pub struct HashMapStorage<T>(FnvHashMap<Index, T>);
 
@@ -81,7 +81,7 @@ unsafe impl<T> DistinctStorage for HashMapStorage<T> {}
 ///
 /// Note that this only stores the data (`T`) densely; indices
 /// to the data are stored in a sparse `Vec`.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(Default(bound = ""))]
 pub struct DenseVecStorage<T> {
     data: Vec<T>,
@@ -132,6 +132,7 @@ unsafe impl<T> DistinctStorage for DenseVecStorage<T> {}
 
 /// A null storage type, used for cases where the component
 /// doesn't contain any data and instead works as a simple flag.
+#[derive(Clone)]
 pub struct NullStorage<T>(T);
 
 impl<T> UnprotectedStorage<T> for NullStorage<T>
@@ -177,7 +178,7 @@ unsafe impl<T> DistinctStorage for NullStorage<T> {}
 
 /// Vector storage. Uses a simple `Vec`. Supposed to have maximum
 /// performance for the components mostly present in entities.
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(Default(bound = ""))]
 pub struct VecStorage<T>(Vec<T>);
 
@@ -228,7 +229,7 @@ unsafe impl<T> DistinctStorage for VecStorage<T> {}
 
 /// Rudy-based storage.
 #[cfg(feature = "rudy")]
-#[derive(Derivative)]
+#[derive(Derivative, Clone)]
 #[derivative(Default(bound = ""))]
 pub struct RudyStorage<T>(RudyMap<Index, T>);
 

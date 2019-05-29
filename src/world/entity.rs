@@ -3,7 +3,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use hibitset::{AtomicBitSet, BitSet, BitSetOr};
 use nonzero_signed::NonZeroI32;
-use shred::Read;
+use shred::{Read, Resource};
 
 use error::WrongGeneration;
 use join::Join;
@@ -36,7 +36,7 @@ pub type Index = u32;
 /// ```
 /// use specs::prelude::*;
 ///
-/// # struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
+/// # #[derive(Clone)] struct Pos; impl Component for Pos { type Storage = VecStorage<Self>; }
 /// # let mut world = World::new(); world.register::<Pos>();
 /// # let entities = world.entities(); let positions = world.write_storage::<Pos>();
 /// for (e, pos) in (&entities, &positions).join() {
@@ -202,6 +202,37 @@ impl Allocator {
     }
 }
 
+impl Clone for Allocator {
+    fn clone(&self) -> Self {
+        use hibitset::BitSetLike;
+        debug_assert!(
+            self.killed.is_empty() && self.raised.is_empty(),
+            "Allocator cannot be cloned if there are deferred modifications; \
+            try calling World::maintain()");
+        
+        Self{
+            generations: self.generations.clone(),
+            alive: self.alive.clone(),
+            raised: Default::default(),
+            killed: Default::default(),
+            cache: self.cache.clone(),
+            max_id: AtomicUsize::new(self.max_id.load(Ordering::Acquire)),
+        }
+    }
+    fn clone_from(&mut self, other: &Self) {
+        use hibitset::BitSetLike;
+        debug_assert!(
+            self .killed.is_empty() && self .raised.is_empty() &&
+            other.killed.is_empty() && other.raised.is_empty(),
+            "Allocator cannot be cloned if there are deferred modifications; \
+            try calling World::maintain()");
+        self.generations.clone_from(&other.generations);
+        self.alive.clone_from(&other.alive);
+        self.cache.clone_from(&other.cache);
+        self.max_id.store(other.max_id.load(Ordering::Acquire), Ordering::Release);
+    }
+}
+
 /// An iterator for entity creation.
 /// Please note that you have to consume
 /// it because iterators are lazy.
@@ -251,7 +282,7 @@ impl Entity {
 ///
 /// You need to call `World::maintain` after creating / deleting
 /// entities with this struct.
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone, Resource)]
 pub struct EntitiesRes {
     pub(crate) alloc: Allocator,
 }
@@ -485,6 +516,19 @@ impl EntityCache {
 
     fn maintain(&mut self) {
         self.cache.truncate(*(self.len.get_mut()));
+    }
+}
+
+impl Clone for EntityCache {
+    fn clone(&self) -> Self {
+        Self{
+            cache: self.cache.clone(),
+            len: AtomicUsize::new(self.len.load(Ordering::Acquire)),
+        }
+    }
+    fn clone_from(&mut self, other: &Self) {
+        self.cache.clone_from(&other.cache);
+        self.len.store(other.len.load(Ordering::Acquire), Ordering::Release);
     }
 }
 
